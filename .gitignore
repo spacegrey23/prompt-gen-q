@@ -3,3 +3,6 @@
 *.gcno
 *.gcda
 *.gcov
+*.tmp
+*.bak
+node_modules
