@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Promptów Graficznych</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        select, button, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        #savedPrompts {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Prompt GEN Q</h1>
+
+    <h2>Oto twój kieszonkowy pomocnik do tworzenia promptów!</h2>
+    
+    <h3>Jeśli twój model językowy wymaga języka angielskiego - to nie martw się! <br> Nasz generator wygeneruje go specjalnie na Twoje potrzeby!</h3>
+    
+    <div id="promptForm">
+        <!-- Formularze będą generowane dynamicznie przez JavaScript -->
+    </div>
+
+    <textarea id="generatedPrompt" rows="4" readonly></textarea>
+    <button onclick="editPrompt()">Edytuj Prompt</button>
+    <button onclick="copyPrompt()">Kopiuj Prompt</button>
+    <button onclick="savePrompt()">Zapisz Prompt</button>
+    <button onclick="generateRandomPrompt()">Generuj Losowy Prompt</button>
+    <button onclick="resetForm()">Zacznij od Nowa</button>
+
+    <div id="savedPrompts">
+        <h2>Zapisane Prompty:</h2>
+        <ul id="promptList"></ul>
+    </div>
+
+    <script>
+        const options = {
+            kategorie: ["Krajobraz", "Portret", "Martwa natura", "Abstrakcja", "Scena rodzajowa", "Fantastyka"],
+            style: {
+                "Krajobraz": ["Impresjonizm", "Realizm", "Ekspresjonizm"],
+                "Portret": ["Realizm", "Pop-art", "Surrealizm"],
+                "Martwa natura": ["Hiperrealizm", "Kubizm", "Barok"],
+                "Abstrakcja": ["Geometryczna", "Liryczna", "Ekspresjonizm abstrakcyjny"],
+                "Scena rodzajowa": ["Realizm", "Impresjonizm", "Symbolizm"],
+                "Fantastyka": ["Surrealizm", "Digital art", "Concept art"]
+            },
+            oswietlenie: ["Naturalne", "Sztuczne", "Mieszane", "Dramatyczne", "Miękkie", "Ostre"],
+            kompozycje: ["Symetryczna", "Asymetryczna", "Trójkątna", "Spiralna", "Złoty podział", "Radialna"],
+            tekstury: ["Gładka", "Szorstka", "Ziarnista", "Puszysta", "Metaliczna", "Organiczna"],
+            detale: ["Minimalistyczne", "Bogate", "Subtelne", "Wyraziste", "Geometryczne", "Organiczne"],
+            media: ["Farba olejna", "Akwarela", "Akryl", "Pastel", "Grafika cyfrowa", "Mieszana technika"],
+            kolorystyka: ["Monochromatyczna", "Analogiczna", "Komplementarna", "Triada", "Ciepła", "Zimna"],
+            narzedzia: ["Pędzel", "Szpachla", "Aerograf", "Tablet graficzny", "Ołówek", "Węgiel"]
+        };
+
+        let savedPrompts = [];
+
+        function generateForm() {
+            const form = document.getElementById('promptForm');
+            form.innerHTML = '';
+            for (const [key, value] of Object.entries(options)) {
+                const select = document.createElement('select');
+                select.id = key;
+                select.onchange = updatePrompt;
+                const label = document.createElement('label');
+                label.for = key;
+                label.textContent = key.charAt(0).toUpperCase() + key.slice(1) + ': ';
+                form.appendChild(label);
+                form.appendChild(select);
+                form.appendChild(document.createElement('br'));
+
+                if (key === 'style') {
+                    continue; // Style będzie aktualizowane po wyborze kategorii
+                }
+
+                select.innerHTML = `<option value="">Wybierz ${key}</option>` +
+                    value.map(item => `<option value="${item}">${item}</option>`).join('');
+            }
+
+            // Dodaj nasłuchiwanie zmiany kategorii, aby aktualizować style
+            document.getElementById('kategorie').addEventListener('change', updateStyles);
+        }
+
+        function updateStyles() {
+            const category = document.getElementById('kategorie').value;
+            const styleSelect = document.getElementById('style');
+            styleSelect.innerHTML = `<option value="">Wybierz styl</option>` +
+                options.style[category].map(item => `<option value="${item}">${item}</option>`).join('');
+        }
+
+        function updatePrompt() {
+            const prompt = {};
+            for (const key of Object.keys(options)) {
+                const value = document.getElementById(key).value;
+                if (value) {
+                    prompt[key] = value;
+                }
+            }
+            document.getElementById('generatedPrompt').value = Object.entries(prompt)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join(', ');
+        }
+
+        function editPrompt() {
+            const promptArea = document.getElementById('generatedPrompt');
+            promptArea.readOnly = false;
+            promptArea.focus();
+        }
+
+        function copyPrompt() {
+            const promptArea = document.getElementById('generatedPrompt');
+            promptArea.select();
+            document.execCommand('copy');
+            alert('Prompt skopiowany do schowka!');
+        }
+
+        function savePrompt() {
+            const prompt = document.getElementById('generatedPrompt').value;
+            if (prompt) {
+                savedPrompts.push(prompt);
+                updateSavedPrompts();
+            }
+        }
+
+        function generateRandomPrompt() {
+            for (const key of Object.keys(options)) {
+                const select = document.getElementById(key);
+                if (key === 'style') {
+                    const category = document.getElementById('kategorie').value;
+                    const randomStyle = options.style[category][Math.floor(Math.random() * options.style[category].length)];
+                    select.value = randomStyle;
+                } else {
+                    const randomIndex = Math.floor(Math.random() * select.options.length);
+                    select.selectedIndex = randomIndex;
+                }
+            }
+            updatePrompt();
+        }
+
+        function resetForm() {
+            generateForm();
+            document.getElementById('generatedPrompt').value = '';
+        }
+
+        function updateSavedPrompts() {
+            const list = document.getElementById('promptList');
+            list.innerHTML = savedPrompts.map(prompt => `<li>${prompt}</li>`).join('');
+        }
+
+        // Inicjalizacja formularza przy załadowaniu strony
+        window.onload = generateForm;
+    </script>
+</body>
+</html>
