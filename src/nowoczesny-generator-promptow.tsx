@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Button from "./components/ui/Button";
 import Select from "./components/ui/Select";
 import TextArea from "./components/ui/TextArea";
@@ -28,11 +28,14 @@ const options = {
 const GeneratorPromptow = () => {
   const [prompt, setPrompt] = useState({});
   const [generatedPrompt, setGeneratedPrompt] = useState('');
-  const [savedPrompts, setSavedPrompts] = useState([]);
+
+  const generateDescriptivePrompt = useCallback(() => {
+    // Twoja logika generowania promptów
+  }, [prompt]);
 
   useEffect(() => {
     generateDescriptivePrompt();
-  }, [prompt, generateDescriptivePrompt]);
+  }, [generateDescriptivePrompt]);
   
   
 
