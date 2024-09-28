@@ -1,19 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import CardHeader from "@/components/ui/CardHeader";
-import CardTitle from "@/components/ui/CardTitle";
-import CardDescription from "@/components/ui/CardDescription";
-import CardContent from "@/components/ui/CardContent";
-import TabsList from "@/components/ui/TabsList";
-import TabsTrigger from "@/components/ui/TabsTrigger";
-import TabsContent from "@/components/ui/TabsContent";
-import SelectTrigger from "@/components/ui/SelectTrigger";
-import SelectValue from "@/components/ui/SelectValue";
-import SelectContent from "@/components/ui/SelectContent";
-import SelectItem from "@/components/ui/SelectItem";
-import CardFooter from "@/components/ui/CardFooter";
-import ToastContainer from "react-toastify/ToastContainer";
-
-
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TextArea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/Tabs';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const options = {
   kategorie: ["Krajobraz", "Portret", "Martwa natura", "Abstrakcja", "Scena rodzajowa", "Fantastyka"],
@@ -37,22 +29,9 @@ const options = {
 const GeneratorPromptow = () => {
   const [prompt, setPrompt] = useState({});
   const [generatedPrompt, setGeneratedPrompt] = useState('');
+  const [savedPrompts, setSavedPrompts] = useState([]);
 
   const generateDescriptivePrompt = useCallback(() => {
-    // Twoja logika generowania promptów
-  }, [prompt]);
-
-  useEffect(() => {
-    generateDescriptivePrompt();
-}, [prompt, generateDescriptivePrompt]); // Dodaj generateDescriptivePrompt
-  
-  
-
-  const handleSelect = (category, value) => {
-    setPrompt(prev => ({ ...prev, [category]: value }));
-  };
-
-  const generateDescriptivePrompt = () => {
     if (Object.keys(prompt).length === 0) return;
 
     let description = `Stwórz ${prompt.kategorie || 'obraz'} w stylu ${prompt.style || 'dowolnym'}. `;
@@ -86,6 +65,14 @@ const GeneratorPromptow = () => {
     }
 
     setGeneratedPrompt(description.trim());
+  }, [prompt]);
+
+  useEffect(() => {
+    generateDescriptivePrompt();
+  }, [prompt, generateDescriptivePrompt]);
+
+  const handleSelect = (category, value) => {
+    setPrompt(prev => ({ ...prev, [category]: value }));
   };
 
   const generateRandomPrompt = () => {
