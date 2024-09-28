@@ -1,9 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Button from "./components/ui/Button";
-import Select from "./components/ui/Select";
-import TextArea from "./components/ui/TextArea";
-import Card, { CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./components/ui/Card";
-import Tabs, { TabsList, TabsTrigger, TabsContent } from "./components/ui/Tabs";
+import CardHeader from "@/components/ui/CardHeader";
+import CardTitle from "@/components/ui/CardTitle";
+import CardDescription from "@/components/ui/CardDescription";
+import CardContent from "@/components/ui/CardContent";
+import TabsList from "@/components/ui/TabsList";
+import TabsTrigger from "@/components/ui/TabsTrigger";
+import TabsContent from "@/components/ui/TabsContent";
+import SelectTrigger from "@/components/ui/SelectTrigger";
+import SelectValue from "@/components/ui/SelectValue";
+import SelectContent from "@/components/ui/SelectContent";
+import SelectItem from "@/components/ui/SelectItem";
+import CardFooter from "@/components/ui/CardFooter";
+import ToastContainer from "react-toastify/ToastContainer";
+
 
 
 const options = {
@@ -35,7 +44,7 @@ const GeneratorPromptow = () => {
 
   useEffect(() => {
     generateDescriptivePrompt();
-  }, [generateDescriptivePrompt]);
+}, [prompt, generateDescriptivePrompt]); // Dodaj generateDescriptivePrompt
   
   
 
