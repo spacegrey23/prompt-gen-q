@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TextArea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/Tabs';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Button from './components/ui/Button'; 
+import Select from './components/ui/Select'; 
+import TextArea from './components/ui/TextArea'; 
+import Card from './components/ui/Card'; 
+import Tabs from './components/ui/Tabs';
 
 const options = {
   kategorie: ["Krajobraz", "Portret", "Martwa natura", "Abstrakcja", "Scena rodzajowa", "Fantastyka"],
